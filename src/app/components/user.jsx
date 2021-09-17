@@ -2,7 +2,7 @@ import React from 'react';
 import Quality from './quality';
 import BookMark from './bookmark';
 
-const User = ({ _id, name, profession, completedMeetings, rate, onHandleDelete, qualities, onHandleToggleBookMark, valueStatus }) => {
+const User = ({ _id, name, profession, completedMeetings, rate, bookmark, onHandleDelete, qualities, onHandleToggleBookMark }) => {
     return (  
         <tr >
           <td>{name}</td>
@@ -18,12 +18,10 @@ const User = ({ _id, name, profession, completedMeetings, rate, onHandleDelete, 
           <td>{completedMeetings}</td>
           <td>{rate}/5</td>
           <td>
-          <button>
               <BookMark
               onClick = {() => onHandleToggleBookMark(_id)}
-              id = {_id}
+              status={bookmark}
               />
-            </button>
           </td>
           <td>
             <button

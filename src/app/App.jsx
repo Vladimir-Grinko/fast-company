@@ -11,12 +11,15 @@ const App = () => {
   };
   
   const handleToggleBookMark = (id) => {
-    const classBookMark = document.getElementById(id);
-    if (classBookMark.className === "bi bi-bookmark") {
-      classBookMark.className = "bi bi-bookmark-fill" ;
-    } else {
-      classBookMark.className = "bi bi-bookmark"
-    }
+    setUsers(
+      users.map((user) => {
+          if (user._id === id) {
+              return { ...user, bookmark: !user.bookmark };
+          }
+          return user;
+      })
+  )
+  console.log(id)
   };
   return(
     <>

@@ -151,8 +151,15 @@ const fetchAll = () =>
         }, 1500);
     });
 
+const getById = (userId) =>
+    new Promise((resolve) => {
+        window.setTimeout(function () {
+            resolve(users.find((user) => user._id === userId));
+        }, 1000);
+    });
 export default {
-    fetchAll
+    fetchAll,
+    getById
 };
 /*
 import { professions } from "./professions.api";

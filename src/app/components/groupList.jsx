@@ -8,7 +8,6 @@ const GroupList = ({
     onItemSelect,
     selectedItem
 }) => {
-    console.log(Object.keys(items));
     return (
         <ul className="list-group">
             {Object.keys(items).map((item) => (

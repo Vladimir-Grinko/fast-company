@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 // import TableHeader from "./tableHeader";
 // import TableBody from "./tableBody";
 import BookMark from "./bookmark";
@@ -14,7 +15,7 @@ const UserTable = ({
     onHandleDelete
 }) => {
     const columns = {
-        name: { path: "name", name: "Имя" },
+        name: { path: "name", name: "Имя", component: (user) => (<Link to={`/users/${user._id}`}>{user.name}</Link>) },
         qualities: {
             name: "Качества",
             component: (user) => <QualitiesList qualities={user.qualities} />

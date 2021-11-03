@@ -5,7 +5,7 @@ const NavBar = () => {
     return (
         <ul className="nav nav-pills">
             <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/">
+                <Link className="nav-link" aria-current="page" to="/">
                     Main
                 </Link>
             </li>

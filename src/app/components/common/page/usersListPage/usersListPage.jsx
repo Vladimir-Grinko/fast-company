@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Pagination from "./pagination";
-import { paginate } from "../utils/paginate";
+import Pagination from "../../pagination";
+import { paginate } from "../../../../utils/paginate";
 import PropTypes from "prop-types";
-import GroupList from "./groupList";
-import API from "../api";
-import SearchStatus from "./searchStatus";
-import UserTable from "./usersTable";
+import GroupList from "../../groupList";
+import API from "../../../../api";
+import SearchStatus from "../../../ui/searchStatus";
+import UserTable from "../../../ui/usersTable";
 import _ from "lodash";
 
-const UsersList = () => {
+const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
@@ -116,13 +116,15 @@ const UsersList = () => {
                         onChange={handleSearchUser}
                     />
                     {count > 0 && (
-                        <UserTable
-                            users={usersCrop}
-                            onSort={handleSort}
-                            selectedSort={sortBy}
-                            onHandleDelete={handleDelete}
-                            onHandleToggleBookMark={handleToggleBookMark}
-                        />
+                        <div className="d-flex flex-column">
+                            <UserTable
+                                users={usersCrop}
+                                onSort={handleSort}
+                                selectedSort={sortBy}
+                                onHandleDelete={handleDelete}
+                                onHandleToggleBookMark={handleToggleBookMark}
+                            />
+                        </div>
                     )}
                     <div className="d-flex justify-content-center">
                         <Pagination
@@ -142,8 +144,8 @@ GroupList.defaultProps = {
     valueProperty: "_id",
     contentProperty: "name"
 };
-UsersList.propTypes = {
+UsersListPage.propTypes = {
     users: PropTypes.array.isRequired
 };
 
-export default UsersList;
+export default UsersListPage;

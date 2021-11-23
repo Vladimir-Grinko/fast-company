@@ -9,9 +9,15 @@ import MultiSelectField from "../../../common/form/multiSelectField";
 
 const UserPageEdit = () => {
     const history = useHistory();
-    const [selectedUser] = useState(JSON.parse(localStorage.getItem("selectedUser")));
-    const defaultQualities = selectedUser.qualities.map(quality => {
-        return { label: quality.name, value: quality._id, color: quality.color };
+    const [selectedUser] = useState(
+        JSON.parse(localStorage.getItem("selectedUser"))
+    );
+    const defaultQualities = selectedUser.qualities.map((quality) => {
+        return {
+            label: quality.name,
+            value: quality._id,
+            color: quality.color
+        };
     });
     const [data, setData] = useState({
         name: selectedUser.name,
@@ -23,6 +29,30 @@ const UserPageEdit = () => {
     const [qualities, setQualities] = useState({});
     const [professions, setProfession] = useState();
     const [errors, setErrors] = useState({});
+
+    const [modifiedUser, setModifiedUser] = useState({});
+
+    const changeUser = () => {
+        setModifiedUser({
+            ...data,
+            qualities: qualities
+                ? data.qualities.map((item) => ({
+                    _id: item.value,
+                    name: item.label,
+                    color: item.color
+                }))
+                : {},
+            profession: professions
+                ? professions[
+                    Object.keys(professions).filter(
+                        (item) =>
+                            professions[item]._id === data.profession &&
+                              professions[item]
+                    )[0]
+                ]
+                : []
+        });
+    };
 
     useEffect(() => {
         API.professions.fetchAll().then((data) => setProfession(data));
@@ -58,6 +88,7 @@ const UserPageEdit = () => {
     };
     useEffect(() => {
         validate();
+        changeUser();
     }, [data]);
     const validate = () => {
         const errors = validator(data, validatorConfig);
@@ -70,10 +101,9 @@ const UserPageEdit = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        localStorage.setItem("selectedUser", JSON.stringify(data));
-        API.users.update(selectedUser._id, data).then();
+        API.users.update(selectedUser._id, modifiedUser).then();
         history.push("/users/" + selectedUser._id);
-        console.log(data);
+        console.log(modifiedUser);
     };
     if (!selectedUser) {
         return "Loading......";
@@ -118,7 +148,7 @@ const UserPageEdit = () => {
                             label="Выберите Ваш пол"
                         />
                         <MultiSelectField
-                            defaultValue = {data.qualities}
+                            defaultValue={data.qualities}
                             options={qualities}
                             onChange={handleChange}
                             name="qualities"

@@ -6,7 +6,21 @@ import UsersListPage from "../components/common/page/usersListPage";
 const Users = () => {
     const params = useParams();
     const { userId } = params;
-    return <>{userId ? <UserPage userId={userId} /> : <UsersListPage />}</>;
+    return (
+        <>
+            {userId
+                ? (
+                    <div className="container">
+                        <div className="row gutters-sm">
+                            <UserPage userId={userId} />{" "}
+                        </div>
+                    </div>
+                )
+                : (
+                    <UsersListPage />
+                )}
+        </>
+    );
 };
 
 export default Users;

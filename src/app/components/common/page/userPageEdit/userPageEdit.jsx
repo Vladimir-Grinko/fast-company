@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { validator } from "../../../../utils/validator";
 import TextField from "../../../common/form/textField";
 import API from "../../../../api";
@@ -8,6 +8,7 @@ import RadioField from "../../../common/form/radioField";
 import MultiSelectField from "../../../common/form/multiSelectField";
 
 const UserPageEdit = () => {
+    const { userId } = useParams();
     const history = useHistory();
     const [selectedUser] = useState(
         JSON.parse(localStorage.getItem("selectedUser"))
@@ -66,8 +67,12 @@ const UserPageEdit = () => {
         }));
     };
 
+    const handleBack = () => {
+        history.push(`/users/${userId}`);
+    };
+
     const validatorConfig = {
-        person: {
+        name: {
             isRequired: {
                 message: "Обязательно введите Ваше имя"
             }
@@ -110,6 +115,10 @@ const UserPageEdit = () => {
     }
     return (
         <div className="container mt-5">
+            <button onClick={handleBack} className="btn btn-primary">
+                <i className="bi bi-caret-left me-1"></i>
+                Назад
+            </button>
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
                     <h3 className="mb-4">Изменение данных</h3>
@@ -135,6 +144,7 @@ const UserPageEdit = () => {
                             onChange={handleChange}
                             value={data.profession}
                             error={errors.profession}
+                            name="profession"
                         />
                         <RadioField
                             options={[

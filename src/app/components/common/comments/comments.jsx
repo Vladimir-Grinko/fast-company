@@ -6,10 +6,6 @@ import NewCommentForm from "./newCommentForm";
 
 const Comments = ({ userId }) => {
     const [comments, setComments] = useState([]);
-    const [users, setUsers] = useState();
-    useEffect(() => {
-        API.users.fetchAll().then((data) => setUsers(data));
-    }, []);
 
     useEffect(() => {
         API.comments
@@ -17,11 +13,11 @@ const Comments = ({ userId }) => {
             .then((data) => setComments(data));
     }, []);
 
-    // const handleSubmit = (data) => {
-    //     API.comments
-    //         .add({ ...data, pageId: userId })
-    //         .then((data) => setComments([...comments, data]));
-    // };
+    const handleSubmit = (data) => {
+        API.comments
+            .add({ ...data, pageId: userId })
+            .then((data) => setComments([...comments, data]));
+    };
 
     const deleteComment = (id) => {
         API.comments.remove(id).then((id) => {
@@ -31,7 +27,7 @@ const Comments = ({ userId }) => {
 
     return (
         <>
-            <NewCommentForm users={users} />
+            <NewCommentForm onSubmit={handleSubmit} />
             {comments.length > 0 && (
                 <CommentsList
                     userId={userId}
@@ -44,7 +40,8 @@ const Comments = ({ userId }) => {
 };
 
 Comments.propTypes = {
-    userId: PropTypes.string
+    userId: PropTypes.string,
+    onSubmit: PropTypes.func
 };
 
 export default Comments;

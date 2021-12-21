@@ -3,7 +3,7 @@ import Comment from "./comment";
 
 import PropTypes from "prop-types";
 
-const CommentsList = ({ userId, comments, onDelete }) => {
+const CommentsList = ({ comments, onDelete }) => {
     if (comments) {
         const sortedComments = comments.sort(
             (a, b) => b.created_at - a.created_at
@@ -20,7 +20,7 @@ const CommentsList = ({ userId, comments, onDelete }) => {
                             content={comment.content}
                             createdAt={comment.created_at}
                             id={comment._id}
-                            userId={userId}
+                            userId={comment.userId}
                             onDelete={onDelete}
                         />
                     ))}

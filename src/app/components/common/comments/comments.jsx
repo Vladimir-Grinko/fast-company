@@ -30,7 +30,6 @@ const Comments = ({ userId }) => {
             <NewCommentForm onSubmit={handleSubmit} />
             {comments.length > 0 && (
                 <CommentsList
-                    userId={userId}
                     comments={comments}
                     onDelete={deleteComment}
                 />

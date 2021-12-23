@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import API from "../../../api";
+import { dateCreatedComment } from "../../../utils/dateCreatedComment";
 
 const Comment = ({
     content,
@@ -39,7 +40,7 @@ const Comment = ({
                                     <p className="mb-1 ">
                                         {user && user.name}{"   "}
                                         <span className="small">
-                                            {createdAt}
+                                            {dateCreatedComment(createdAt)}
                                         </span>
                                     </p>
                                     <button

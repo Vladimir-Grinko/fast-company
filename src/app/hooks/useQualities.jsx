@@ -14,8 +14,6 @@ export const QualitiesProvider = ({ children }) => {
     const [allQualities, setQualities] = useState([]);
     const [error, setError] = useState(null);
 
-    console.log(allQualities);
-
     useEffect(() => {
         getQualitiesList();
     }, []);
@@ -51,14 +49,14 @@ export const QualitiesProvider = ({ children }) => {
     }
 
     function errorCatcher(error) {
-        const { message } = error.responce.data;
+        const { message } = error.response.data;
         setError(message);
         setLoading(false);
     }
 
     return (
         <QualitiesContext.Provider
-            value={{ isLoading, getQualityForUser }}
+            value={{ allQualities, isLoading, getQualityForUser }}
         >
             { children }
         </QualitiesContext.Provider>

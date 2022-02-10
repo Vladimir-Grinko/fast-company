@@ -29,7 +29,6 @@ const MultiSelectField = ({ options, onChange, name, label, defaultValue }) => {
                 name={name}
                 options={optionsArray}
                 onChange={handleChange}
-                styles={optionsArray.color}
             />
         </div>
     );

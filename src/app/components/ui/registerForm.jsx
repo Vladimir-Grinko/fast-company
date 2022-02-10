@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
-import API from "../../api";
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
+import { useQualities } from "../../hooks/useQualities";
+import { useProfessions } from "../../hooks/useProfession";
+import { useAuth } from "../../hooks/useAuth";
+import { useHistory } from "react-router-dom";
 
 const RegisterForm = () => {
+    const history = useHistory();
     const [data, setData] = useState({
         email: "",
         password: "",
@@ -16,14 +20,20 @@ const RegisterForm = () => {
         qualities: [],
         licence: false
     });
-    const [qualities, setQualities] = useState({});
-    const [professions, setProfession] = useState();
-    const [errors, setErrors] = useState({});
+    const { allQualities } = useQualities();
+    const { signUp } = useAuth();
 
-    useEffect(() => {
-        API.professions.fetchAll().then((data) => setProfession(data));
-        API.qualities.fetchAll().then((data) => setQualities(data));
-    }, []);
+    const qualitiesList = allQualities.map((q) => ({
+        label: q.name,
+        value: q._id
+    }));
+
+    const { professions } = useProfessions();
+    const professionsList = professions.map((prof) => ({
+        label: prof.name,
+        value: prof._id
+    }));
+    const [errors, setErrors] = useState({});
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -63,7 +73,8 @@ const RegisterForm = () => {
         },
         licence: {
             isRequired: {
-                message: "Вы не можете использовать наш сервис без подтверждения лицензионного соглашения"
+                message:
+                    "Вы не можете использовать наш сервис без подтверждения лицензионного соглашения"
             }
         }
     };
@@ -77,12 +88,23 @@ const RegisterForm = () => {
     };
     const isValid = Object.keys(errors).length === 0; // проверка валидности для активации кнопки Submit
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
+        const newData = {
+            ...data,
+            qualities: data.qualities.map((q) => q.value)
+        };
+
+        try {
+            await signUp(newData);
+            history.push("/");
+        } catch (error) {
+            setErrors(error);
+        }
     };
+
     return (
         <form onSubmit={handleSubmit}>
             <TextField
@@ -103,7 +125,7 @@ const RegisterForm = () => {
             <SelectField
                 label="Выберите Вашу профессию"
                 defaultOption="Choose..."
-                options={professions}
+                options={professionsList}
                 onChange={handleChange}
                 value={data.profession}
                 error={errors.profession}
@@ -121,7 +143,7 @@ const RegisterForm = () => {
                 label="Выберите Ваш пол"
             />
             <MultiSelectField
-                options={qualities}
+                options={qualitiesList}
                 onChange={handleChange}
                 name="qualities"
                 label="Выберите Ваши качества"
@@ -135,7 +157,7 @@ const RegisterForm = () => {
                 Подтвердить <a>лицензионное соглашение</a>
             </CheckBoxField>
             <button
-                type = "submit"
+                type="submit"
                 className="btn btn-primary w-100 mx-auto"
                 disabled={!isValid}
             >

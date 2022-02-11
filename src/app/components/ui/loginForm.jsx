@@ -15,11 +15,14 @@ const LoginForm = () => {
         stayOn: false
     });
     const [errors, setErrors] = useState({});
+    const [enterError, setEnterError] = useState(null);
+
     const handleChange = (target) => {
         setData((prevState) => ({
             ...prevState,
             [target.name]: target.value
         }));
+        setEnterError(null);
     };
 
     const validateScheme = yup.object().shape({
@@ -90,13 +93,13 @@ const LoginForm = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
 
         try {
             await logIn({ email: data.email, password: data.password });
-            history.push("/users");
+            history.push("/");
         } catch (error) {
             setErrors(error);
+            setEnterError(error.message);
         }
     };
     return (
@@ -123,9 +126,10 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxField>
+            {enterError && <p className="text-danger">{enterError}</p>}
             <button
                 className="btn btn-primary w-100 mx-auto"
-                disabled={!isValid}
+                disabled={!isValid || enterError}
             >
                 Submit
             </button>

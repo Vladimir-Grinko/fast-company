@@ -8,13 +8,7 @@ import Qualities from "../ui/qualities";
 import Table from "../common/table";
 import Profession from "./profession";
 
-const UserTable = ({
-    users,
-    onSort,
-    selectedSort,
-    onHandleToggleBookMark,
-    onHandleDelete
-}) => {
+const UserTable = ({ users, onSort, selectedSort, onHandleToggleBookMark }) => {
     const columns = {
         name: {
             path: "name",
@@ -45,16 +39,6 @@ const UserTable = ({
                     status={user.bookmark}
                 />
             )
-        },
-        delete: {
-            component: (user) => (
-                <button
-                    onClick={() => onHandleDelete(user._id)}
-                    className="btn bg-danger btn-sm text-white"
-                >
-                    Delete
-                </button>
-            )
         }
     };
     return (
@@ -74,8 +58,7 @@ UserTable.propTypes = {
     users: PropTypes.array.isRequired,
     onSort: PropTypes.func.isRequired,
     selectedSort: PropTypes.object.isRequired,
-    onHandleToggleBookMark: PropTypes.func.isRequired,
-    onHandleDelete: PropTypes.func.isRequired
+    onHandleToggleBookMark: PropTypes.func.isRequired
 };
 
 export default UserTable;

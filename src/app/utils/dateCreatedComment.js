@@ -25,9 +25,15 @@ export function dateCreatedComment(createdAt) {
     } else if (seconds > minute * 60 && seconds <= oneDay) {
         dateText = ` - ${dateComment.getHours()}:${dateComment.getMinutes()}`;
     } else if (seconds > oneDay && seconds <= oneYear) {
-        dateText = ` - ${dateComment.toLocaleDateString("UTS", optionsMonthDay)}`;
+        dateText = ` - ${dateComment.toLocaleDateString(
+            "UTS",
+            optionsMonthDay
+        )}`;
     } else if (seconds > oneYear) {
-        dateText = ` - ${dateComment.toLocaleDateString("UTS", optionsFullDate)}`;
+        dateText = ` - ${dateComment.toLocaleDateString(
+            "UTS",
+            optionsFullDate
+        )}`;
     }
     return dateText;
 }

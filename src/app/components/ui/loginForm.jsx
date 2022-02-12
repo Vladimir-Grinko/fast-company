@@ -8,6 +8,7 @@ import * as yup from "yup";
 
 const LoginForm = () => {
     const history = useHistory();
+
     const { logIn } = useAuth();
     const [data, setData] = useState({
         email: "",
@@ -96,7 +97,12 @@ const LoginForm = () => {
 
         try {
             await logIn({ email: data.email, password: data.password });
-            history.push("/");
+
+            history.push(
+                history.location.state
+                    ? history.location.state.from.pathname
+                    : "/"
+            );
         } catch (error) {
             setErrors(error);
             setEnterError(error.message);

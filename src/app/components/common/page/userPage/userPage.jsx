@@ -15,13 +15,15 @@ const UserPage = ({ userId }) => {
     const { professions, isLoading } = useProfessions();
 
     const user = getUserById(userId);
-    const professionUser = professions.find((prof) => prof._id === user.profession);
+    const professionUser = professions.find(
+        (prof) => prof._id === user.profession
+    );
 
     const handleAllUsers = () => {
         history.push("/users");
     };
 
-    if (!user && !isLoading) {
+    if (!user && isLoading) {
         return "Loading......";
     }
     return (

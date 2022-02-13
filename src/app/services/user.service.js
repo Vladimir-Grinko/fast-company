@@ -22,7 +22,7 @@ const userService = {
         return data;
     },
     update: async (content) => {
-        const { data } = await httpService.put(
+        const { data } = await httpService.patch(
             userEndpoint + localStorageService.getUserId(),
             content
         );

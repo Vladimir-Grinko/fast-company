@@ -11,17 +11,43 @@ import { useProfessions } from "../../../../hooks/useProfession";
 
 const UserPageEdit = () => {
     const history = useHistory();
+    const [errors, setErrors] = useState({});
+    const [data, setData] = useState();
+    const [isLoading, setLoading] = useState(true);
     const { currentUser, updateUser } = useAuth();
     const {
         allQualities,
         getQualityForUser,
         isLoading: isLoadingQual
     } = useQualities();
-    const {
-        professions,
-        getProfession,
-        isLoading: isLoadingProf
-    } = useProfessions();
+    const { professions, isLoading: isLoadingProf } = useProfessions();
+    const defaultQualities = getQualityForUser(currentUser.qualities).map(
+        (quality) => {
+            return {
+                label: quality.name,
+                value: quality._id
+            };
+        }
+    );
+    useEffect(() => {
+        if (
+            currentUser &&
+            !isLoadingProf &&
+            !isLoadingQual &&
+            !data
+        ) {
+            setData({
+                ...currentUser,
+                qualities: defaultQualities
+            });
+        }
+    }, [currentUser, isLoadingProf, isLoadingQual, getQualityForUser, data]);
+
+    useEffect(() => {
+        if (data && isLoading) {
+            setLoading(false);
+        }
+    }, [data]);
 
     const qualitiesList = allQualities.map((q) => ({
         label: q.name,
@@ -32,24 +58,6 @@ const UserPageEdit = () => {
         label: prof.name,
         value: prof._id
     }));
-    const defaultQualities = getQualityForUser(currentUser.qualities).map(
-        (quality) => {
-            return {
-                label: quality.name,
-                value: quality._id
-            };
-        }
-    );
-    const defaultProfession = getProfession(currentUser.profession);
-    const [data, setData] = useState({
-        name: currentUser.name,
-        email: currentUser.email,
-        profession: defaultProfession,
-        sex: currentUser.sex,
-        qualities: defaultQualities
-    });
-
-    const [errors, setErrors] = useState({});
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -96,7 +104,6 @@ const UserPageEdit = () => {
         const isValid = validate();
         if (!isValid) return;
         const newData = {
-            ...currentUser,
             ...data,
             qualities: data.qualities.map((q) => q.value)
         };
@@ -112,7 +119,7 @@ const UserPageEdit = () => {
         }
     };
 
-    if (!currentUser && !isLoadingProf && !isLoadingQual) {
+    if (!data && isLoading) {
         return "Loading......";
     }
     return (
@@ -144,7 +151,7 @@ const UserPageEdit = () => {
                             defaultOption="Choose..."
                             options={professionsList}
                             onChange={handleChange}
-                            value={data.profession._id}
+                            value={data.profession}
                             error={errors.profession}
                             name="profession"
                         />

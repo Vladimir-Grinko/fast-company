@@ -154,7 +154,9 @@ const AuthProvider = ({ children }) => {
         setError(message);
     }
     return (
-        <AuthContext.Provider value={{ signUp, currentUser, logIn, logOut, updateUser }}>
+        <AuthContext.Provider
+            value={{ signUp, currentUser, logIn, logOut, updateUser }}
+        >
             {!isLoading ? children : "Loading .... "}
         </AuthContext.Provider>
     );

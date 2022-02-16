@@ -35,19 +35,6 @@ export const QualitiesProvider = ({ children }) => {
         }
     }
 
-    function getQualityForUser(qualitiesForUser) {
-        const endQualities = [];
-        for (const qualForUser of qualitiesForUser) {
-            for (const qualOfAll of allQualities) {
-                if (qualOfAll._id === qualForUser) {
-                    endQualities.push(qualOfAll);
-                }
-            }
-        }
-
-        return endQualities;
-    }
-
     function errorCatcher(error) {
         const { message } = error.response.data;
         setError(message);
@@ -55,10 +42,8 @@ export const QualitiesProvider = ({ children }) => {
     }
 
     return (
-        <QualitiesContext.Provider
-            value={{ allQualities, isLoading, getQualityForUser }}
-        >
-            { children }
+        <QualitiesContext.Provider value={{ allQualities, isLoading }}>
+            {children}
         </QualitiesContext.Provider>
     );
 };

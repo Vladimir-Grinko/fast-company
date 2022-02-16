@@ -6,8 +6,12 @@ import SelectField from "../../../common/form/selectField";
 import RadioField from "../../../common/form/radioField";
 import MultiSelectField from "../../../common/form/multiSelectField";
 import { useAuth } from "../../../../hooks/useAuth";
-import { useQualities } from "../../../../hooks/useQualities";
 import { useProfessions } from "../../../../hooks/useProfession";
+import { useSelector } from "react-redux";
+import {
+    getQualities,
+    getQualitiesIoadingStatus
+} from "../../../../store/qualities";
 
 const UserPageEdit = () => {
     const history = useHistory();
@@ -15,11 +19,10 @@ const UserPageEdit = () => {
     const [data, setData] = useState();
     const [isLoading, setLoading] = useState(true);
     const { currentUser, updateUser } = useAuth();
-    const {
-        allQualities,
-        getQualityForUser,
-        isLoading: isLoadingQual
-    } = useQualities();
+
+    const qualities = useSelector(getQualities());
+    const isLoadingQual = useSelector(getQualitiesIoadingStatus());
+
     const { professions, isLoading: isLoadingProf } = useProfessions();
     const defaultQualities = getQualityForUser(currentUser.qualities).map(
         (quality) => {
@@ -29,19 +32,27 @@ const UserPageEdit = () => {
             };
         }
     );
+
+    function getQualityForUser(qualitiesForUser) {
+        const endQualities = [];
+        for (const qualForUser of qualitiesForUser) {
+            for (const qualOfAll of qualities) {
+                if (qualOfAll._id === qualForUser) {
+                    endQualities.push(qualOfAll);
+                }
+            }
+        }
+
+        return endQualities;
+    }
     useEffect(() => {
-        if (
-            currentUser &&
-            !isLoadingProf &&
-            !isLoadingQual &&
-            !data
-        ) {
+        if (currentUser && !isLoadingProf && !isLoadingQual && !data) {
             setData({
                 ...currentUser,
                 qualities: defaultQualities
             });
         }
-    }, [currentUser, isLoadingProf, isLoadingQual, getQualityForUser, data]);
+    }, [currentUser, isLoadingProf, isLoadingQual, data]);
 
     useEffect(() => {
         if (data && isLoading) {
@@ -49,7 +60,7 @@ const UserPageEdit = () => {
         }
     }, [data]);
 
-    const qualitiesList = allQualities.map((q) => ({
+    const qualitiesList = qualities.map((q) => ({
         label: q.name,
         value: q._id
     }));

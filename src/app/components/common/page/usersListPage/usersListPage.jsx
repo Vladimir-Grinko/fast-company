@@ -6,9 +6,12 @@ import GroupList from "../../groupList";
 import SearchStatus from "../../../ui/searchStatus";
 import UserTable from "../../../ui/usersTable";
 import _ from "lodash";
-import { useUser } from "../../../../hooks/useUsers";
-import { useProfessions } from "../../../../hooks/useProfession";
-import { useAuth } from "../../../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import {
+    getProfessions,
+    getProfessionsIoadingStatus
+} from "../../../../store/professions";
+import { getCurrentUserId, getUsersList } from "../../../../store/users";
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,9 +20,10 @@ const UsersListPage = () => {
     const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
     const pageSize = 4;
 
-    const { users } = useUser();
-    const { currentUser } = useAuth();
-    const { professions, isLoading: professionsLoading } = useProfessions();
+    const users = useSelector(getUsersList());
+    const currentUserId = useSelector(getCurrentUserId());
+    const professions = useSelector(getProfessions());
+    const professionsLoading = useSelector(getProfessionsIoadingStatus());
 
     const handleDelete = (userId) => {
         // setUsers(users.filter((user) => user._id !== userId));
@@ -43,7 +47,7 @@ const UsersListPage = () => {
 
     const handleProfessionSelect = (item) => {
         if (searchUser !== "") setSearchUser("");
-        setSelectedProf(item);
+        setSelectedProf(item._id);
     };
 
     const handleSearchUser = ({ target }) => {
@@ -74,7 +78,7 @@ const UsersListPage = () => {
                       JSON.stringify(selectedProf)
               )
             : data;
-        return filteredUsers.filter((u) => u._id !== currentUser._id);
+        return filteredUsers.filter((u) => u._id !== currentUserId);
     }
     const filteredUsers = filterUsers(users);
     const count = filteredUsers.length;

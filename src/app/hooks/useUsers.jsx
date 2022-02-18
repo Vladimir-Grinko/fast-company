@@ -49,7 +49,7 @@ const UserProvider = ({ children }) => {
     }
 
     function errorCatcher(error) {
-        if (error !== null && error !== undefined) {
+        if (error !== null) {
             const { message } = error.response.data;
             setError(message);
             setLoading(false);

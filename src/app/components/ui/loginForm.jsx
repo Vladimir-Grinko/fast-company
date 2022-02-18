@@ -2,28 +2,27 @@ import React, { useState, useEffect } from "react";
 // import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
-import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
 import * as yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { getAuthErrors, login } from "../../store/users";
 
 const LoginForm = () => {
     const history = useHistory();
-
-    const { logIn } = useAuth();
+    const loginError = useSelector(getAuthErrors());
+    const dispatch = useDispatch();
     const [data, setData] = useState({
         email: "",
         password: "",
         stayOn: false
     });
     const [errors, setErrors] = useState({});
-    const [enterError, setEnterError] = useState(null);
 
     const handleChange = (target) => {
         setData((prevState) => ({
             ...prevState,
             [target.name]: target.value
         }));
-        setEnterError(null);
     };
 
     const validateScheme = yup.object().shape({
@@ -78,6 +77,7 @@ const LoginForm = () => {
     // };
     useEffect(() => {
         validate();
+        // dispatch(getAuthErrors());
     }, [data]);
     const validate = () => {
         // const errors = validator(data, validatorConfig);
@@ -90,23 +90,15 @@ const LoginForm = () => {
     };
     const isValid = Object.keys(errors).length === 0; // проверка валидности для активации кнопки Submit
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
+        const redirect = history.location.state
+            ? history.location.state.from.pathname
+            : "/";
 
-        try {
-            await logIn({ email: data.email, password: data.password });
-
-            history.push(
-                history.location.state
-                    ? history.location.state.from.pathname
-                    : "/"
-            );
-        } catch (error) {
-            setErrors(error);
-            setEnterError(error.message);
-        }
+        dispatch(login({ payload: data, redirect }));
     };
     return (
         <form onSubmit={handleSubmit}>
@@ -132,10 +124,10 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxField>
-            {enterError && <p className="text-danger">{enterError}</p>}
+            {loginError && <p className="text-danger">{loginError}</p>}
             <button
                 className="btn btn-primary w-100 mx-auto"
-                disabled={!isValid || enterError}
+                disabled={!isValid || loginError}
             >
                 Submit
             </button>

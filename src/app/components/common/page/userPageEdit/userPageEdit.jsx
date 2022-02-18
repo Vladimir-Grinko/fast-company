@@ -5,25 +5,30 @@ import TextField from "../../../common/form/textField";
 import SelectField from "../../../common/form/selectField";
 import RadioField from "../../../common/form/radioField";
 import MultiSelectField from "../../../common/form/multiSelectField";
-import { useAuth } from "../../../../hooks/useAuth";
-import { useProfessions } from "../../../../hooks/useProfession";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
     getQualities,
     getQualitiesIoadingStatus
 } from "../../../../store/qualities";
+import {
+    getProfessions,
+    getProfessionsIoadingStatus
+} from "../../../../store/professions";
+import { getCurrentUserData, updateUser } from "../../../../store/users";
 
 const UserPageEdit = () => {
     const history = useHistory();
+    const dispatch = useDispatch();
     const [errors, setErrors] = useState({});
     const [data, setData] = useState();
     const [isLoading, setLoading] = useState(true);
-    const { currentUser, updateUser } = useAuth();
+    const currentUser = useSelector(getCurrentUserData());
 
     const qualities = useSelector(getQualities());
     const isLoadingQual = useSelector(getQualitiesIoadingStatus());
 
-    const { professions, isLoading: isLoadingProf } = useProfessions();
+    const professions = useSelector(getProfessions());
+    const isLoadingProf = useSelector(getProfessionsIoadingStatus());
     const defaultQualities = getQualityForUser(currentUser.qualities).map(
         (quality) => {
             return {
@@ -110,7 +115,7 @@ const UserPageEdit = () => {
     };
     const isValid = Object.keys(errors).length === 0;
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
@@ -118,16 +123,12 @@ const UserPageEdit = () => {
             ...data,
             qualities: data.qualities.map((q) => q.value)
         };
-        try {
-            await updateUser(newData);
-            setData((prevState) => ({
-                ...prevState,
-                data
-            }));
-            history.push("/users/" + currentUser._id);
-        } catch (error) {
-            setErrors(error);
-        }
+
+        dispatch(updateUser(newData));
+        setData((prevState) => ({
+            ...prevState,
+            data
+        }));
     };
 
     if (!data && isLoading) {

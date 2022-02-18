@@ -5,14 +5,16 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
-import { useProfessions } from "../../hooks/useProfession";
-import { useAuth } from "../../hooks/useAuth";
-import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getQualities } from "../../store/qualities";
+import { useSelector, useDispatch } from "react-redux";
+import { getQualities, getQualitiesIoadingStatus } from "../../store/qualities";
+import {
+    getProfessions,
+    getProfessionsIoadingStatus
+} from "../../store/professions";
+import { signUp } from "../../store/users";
 
 const RegisterForm = () => {
-    const history = useHistory();
+    const dispatch = useDispatch();
     const [data, setData] = useState({
         email: "",
         password: "",
@@ -23,14 +25,15 @@ const RegisterForm = () => {
         licence: false
     });
     const qualities = useSelector(getQualities());
-    const { signUp } = useAuth();
+    const isLoadingQual = useSelector(getQualitiesIoadingStatus());
 
     const qualitiesList = qualities.map((q) => ({
         label: q.name,
         value: q._id
     }));
 
-    const { professions } = useProfessions();
+    const professions = useSelector(getProfessions());
+    const isLoadingProf = useSelector(getProfessionsIoadingStatus());
     const professionsList = professions.map((prof) => ({
         label: prof.name,
         value: prof._id
@@ -99,7 +102,7 @@ const RegisterForm = () => {
     };
     const isValid = Object.keys(errors).length === 0; // проверка валидности для активации кнопки Submit
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
@@ -108,13 +111,10 @@ const RegisterForm = () => {
             qualities: data.qualities.map((q) => q.value)
         };
 
-        try {
-            await signUp(newData);
-            history.push("/");
-        } catch (error) {
-            setErrors(error);
-        }
+        dispatch(signUp(newData));
     };
+
+    if (isLoadingProf && isLoadingQual) return "Loading......";
 
     return (
         <form onSubmit={handleSubmit}>

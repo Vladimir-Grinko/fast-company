@@ -2,22 +2,22 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import Comments from "../../../ui/comments";
-import { useUser } from "../../../../hooks/useUsers";
 import UserCard from "../../../ui/userCard";
 import QualitiesCard from "../../../ui/qualitiesCard";
 import MeetingsCard from "../../../ui/meetingsCard";
-import { useProfessions } from "../../../../hooks/useProfession";
-import { CommentsProvider } from "../../../../hooks/useComments";
+import { useSelector } from "react-redux";
+import {
+    getProfessionById,
+    getProfessionsIoadingStatus
+} from "../../../../store/professions";
+import { getUserById } from "../../../../store/users";
 
 const UserPage = ({ userId }) => {
     const history = useHistory();
-    const { getUserById } = useUser();
-    const { professions, isLoading } = useProfessions();
 
-    const user = getUserById(userId);
-    const professionUser = professions.find(
-        (prof) => prof._id === user.profession
-    );
+    const user = useSelector(getUserById(userId));
+    const isLoading = useSelector(getProfessionsIoadingStatus());
+    const profession = useSelector(getProfessionById(user.profession));
 
     const handleAllUsers = () => {
         history.push("/users");
@@ -38,14 +38,12 @@ const UserPage = ({ userId }) => {
                 </button>
 
                 <div className="col-md-4 mb-3">
-                    <UserCard user={user} profession={professionUser.name} />
+                    <UserCard user={user} profession={profession.name} />
                     <QualitiesCard data={user.qualities} />
                     <MeetingsCard value={user.completedMeetings} />
                 </div>
                 <div className="col-md-8">
-                    <CommentsProvider>
-                        <Comments />
-                    </CommentsProvider>
+                    <Comments />
                 </div>
             </div>
         </div>

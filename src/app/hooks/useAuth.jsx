@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import userService from "../services/user.service";
 import localStorageService, {
     setTokens
@@ -22,7 +22,7 @@ export const useAuth = () => {
 
 const AuthProvider = ({ children }) => {
     const [currentUser, setUser] = useState();
-    const [error, setError] = useState(null);
+    // const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(true);
     const history = useHistory();
 
@@ -30,13 +30,13 @@ const AuthProvider = ({ children }) => {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    useEffect(() => {
-        if (localStorageService.getAccessToken()) {
-            getUserData();
-        } else {
-            setLoading(false);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (localStorageService.getAccessToken()) {
+    //         getUserData();
+    //     } else {
+    //         setLoading(false);
+    //     }
+    // }, []);
 
     async function signUp({ email, password, ...rest }) {
         try {
@@ -142,16 +142,16 @@ const AuthProvider = ({ children }) => {
         history.push("/");
     }
 
-    useEffect(() => {
-        if (error !== null) {
-            toast(error);
-            setError(null);
-        }
-    }, [error]);
+    // useEffect(() => {
+    //     if (error !== null) {
+    //         toast(error);
+    //         setError(null);
+    //     }
+    // }, [error]);
 
     function errorCatcher(error) {
         const { message } = error.response.data;
-        setError(message);
+        console.log(message);
     }
     return (
         <AuthContext.Provider

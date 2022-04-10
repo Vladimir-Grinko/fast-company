@@ -1,0 +1,29 @@
+{
+    "name": "fast-company-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "cross-env NODE_ENV=production node app.js",
+        "serve": "cross-env NODE_ENV=development nodemon app.js"
+    },
+    "author": "Vladimir Grinko",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "chalk": "^4.1.2",
+        "config": "^3.3.7",
+        "cors": "^2.8.5",
+        "express": "^4.17.3",
+        "express-validator": "^6.14.0",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.2.3"
+    },
+    "devDependencies": {
+        "cross-env": "^7.0.3",
+        "eslint": "^8.13.0",
+        "eslint-plugin-react": "^7.29.4",
+        "nodemon": "^2.0.15",
+        "prettier": "2.6.2"
+    }
+}

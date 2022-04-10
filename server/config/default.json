@@ -1,0 +1,6 @@
+{
+    "port": 8080,
+    "mongoUri": "mongodb+srv://Vladimir:fast-company-055@cluster0.9fiyu.mongodb.net/fast-company?retryWrites=true&w=majority",
+    "accessSecret": "secret from backend",
+    "refreshSecret": "refresh key for user"
+}

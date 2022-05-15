@@ -18,7 +18,7 @@ const NavProfile = () => {
                 <div className="me-2">{currentUser.name}</div>
                 <img
                     src={currentUser.image}
-                    alt=""
+                    alt={currentUser.name}
                     height="40"
                     className="img-responsive rounded-circle"
                 />
